@@ -83,11 +83,12 @@ export const GET = async (req: AuthenticatedMedusaRequest, res: MedusaResponse) 
       Object.entries(where).forEach(([key, value]) => {
         // Handle special operators like $ilike for search
         if (typeof value === 'object' && value !== null && '$ilike' in value) {
-          query = query.where(key, 'ilike', value.$ilike)
-          countQuery = countQuery.where(key, 'ilike', value.$ilike)
+          const ilikeValue = (value as { $ilike: string }).$ilike
+          query = query.where(key, 'ilike', `%${ilikeValue}%`)
+          countQuery = countQuery.where(key, 'ilike', `%${ilikeValue}%`)
         } else {
-          query = query.where(key, value)
-          countQuery = countQuery.where(key, value)
+          query = query.where(key, value as any)
+          countQuery = countQuery.where(key, value as any)
         }
       })
     }
@@ -154,7 +155,8 @@ export const POST = async (req: AuthenticatedMedusaRequest, res: MedusaResponse)
       })
     }
     
-    const article = { ...req.body }
+    const body = req.body as Record<string, any>
+    const article = { ...body }
     
     // Generate ID if not provided
     if (!article.id) {

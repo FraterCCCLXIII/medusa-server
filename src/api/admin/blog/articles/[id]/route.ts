@@ -131,8 +131,11 @@ export const POST = async (req: AuthenticatedMedusaRequest, res: MedusaResponse)
       })
     }
     
+    // Type assertion for req.body
+    const body = req.body as Record<string, any>
+    
     // Handle draft status change
-    if (req.body.change_draft_status) {
+    if (body?.change_draft_status) {
       // Parse body if it's a string to check if it's empty
       let parsedBody = existingArticle.body
       if (typeof existingArticle.body === "string") {
@@ -152,7 +155,7 @@ export const POST = async (req: AuthenticatedMedusaRequest, res: MedusaResponse)
       const isTitleEmpty = !existingArticle.title || existingArticle.title.trim() === ""
       
       // If trying to publish (draft = false), ensure article has content
-      if (req.body.draft === false && (isBodyEmpty || isTitleEmpty)) {
+      if (body.draft === false && (isBodyEmpty || isTitleEmpty)) {
         return res.json({
           success: false,
           error: "You cannot changed the draft status if the article is empty or the article is not saved"
@@ -161,7 +164,7 @@ export const POST = async (req: AuthenticatedMedusaRequest, res: MedusaResponse)
       
       const [updatedArticle] = await pgConnection("blog_article")
         .where({ id })
-        .update({ draft: req.body.draft, updated_at: new Date() })
+        .update({ draft: body.draft, updated_at: new Date() })
         .returning("*")
       
       // Parse JSON fields
@@ -199,9 +202,9 @@ export const POST = async (req: AuthenticatedMedusaRequest, res: MedusaResponse)
         
         // ALL fields in blog_article have NOT NULL constraints, so we must use empty strings, not null
         // Handle null/undefined/empty values explicitly
-        Object.keys(req.body).forEach(key => {
+        Object.keys(body).forEach(key => {
           if (key !== "id" && key !== "created_at" && key !== "updated_at" && key !== "change_draft_status") {
-            const value = req.body[key]
+            const value = body[key]
             
             // Explicitly handle null, undefined, and empty string values
             // Since all fields have NOT NULL constraints, we convert null to empty string
@@ -249,9 +252,9 @@ export const POST = async (req: AuthenticatedMedusaRequest, res: MedusaResponse)
         }
         
         // Debug: Log what's being sent for thumbnail_image
-        console.log("[Blog API Update] Request body thumbnail_image:", req.body.thumbnail_image)
+        console.log("[Blog API Update] Request body thumbnail_image:", body.thumbnail_image)
         console.log("[Blog API Update] Existing article thumbnail_image:", existingArticle.thumbnail_image)
-        console.log("[Blog API Update] All request body keys:", Object.keys(req.body))
+        console.log("[Blog API Update] All request body keys:", Object.keys(body))
         console.log("[Blog API Update] Update data before defaults:", JSON.stringify(updateData, null, 2))
     
     // Only set defaults for fields that are NOT in the update (undefined), not for fields explicitly set to empty/null

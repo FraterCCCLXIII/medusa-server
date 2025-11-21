@@ -304,20 +304,19 @@ const ArticlePage = () => {
                 </div>
 
                 {/* Table */}
-                  <div className="flex w-full flex-col overflow-hidden">
-                    <div className="w-full overflow-x-auto">
-                      <DataTable instance={table}>
-                        <DataTable.Toolbar className="flex flex-col items-start justify-between gap-2 md:flex-row md:items-center">
-                          <div className="flex items-center gap-2">
-                            <DataTable.FilterMenu tooltip="Filter" />
-                            <DataTable.SortingMenu tooltip="Sort" />
-                          </div>
-                          <DataTable.Search placeholder="Search articles..." />
-                        </DataTable.Toolbar>
-                        <DataTable.Table />
-                        <DataTable.Pagination />
-                      </DataTable>
-                    </div>
+                <div className="flex w-full flex-col overflow-hidden">
+                  <div className="w-full overflow-x-auto">
+                    <DataTable instance={table}>
+                      <DataTable.Toolbar className="flex flex-col items-start justify-between gap-2 md:flex-row md:items-center">
+                        <div className="flex items-center gap-2">
+                          <DataTable.FilterMenu tooltip="Filter" />
+                          <DataTable.SortingMenu tooltip="Sort" />
+                        </div>
+                        <DataTable.Search placeholder="Search articles..." />
+                      </DataTable.Toolbar>
+                      <DataTable.Table />
+                      <DataTable.Pagination />
+                    </DataTable>
                   </div>
                 </div>
               </div>
