@@ -2,7 +2,7 @@ import { defineRouteConfig } from "@medusajs/admin-sdk"
 import { DocumentSeries } from "@medusajs/icons"
 import React, { useEffect, useState, useMemo } from "react"
 import { useNavigate } from "react-router-dom"
-import { sdk } from "../../../lib/compat-provider"
+import { sdk } from "../../lib/compat-provider"
 import { 
   DataTable, 
   Heading, 
